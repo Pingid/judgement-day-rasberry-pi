@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
-    "pi-camera": "^1.2.1"
+    "pi-camera": "^1.2.1",
+    "yargs": "^13.2.4"
   }
 }

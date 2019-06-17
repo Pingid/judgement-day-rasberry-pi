@@ -2,6 +2,7 @@ const PiCamera = require('pi-camera')
 const fs = require('fs')
 const { promisify } = require('util')
 const axios = require('axios')
+const argv = require('yargs').argv
 
 const pictureFile = `${__dirname}/test.jpg`
 const ENDPOINT = 'https://csdn6q1rd0.execute-api.eu-west-2.amazonaws.com/dev/'
@@ -23,5 +24,15 @@ const main = () => Promise.resolve()
   .then(data => sleep(data.cameras.delay || 10000).then(main))
   .catch(error => { console.log(error); return sleep(data.cameras.delay || 10000).then(main) })
 
+const startup = () => Promise.resolve()
+  .then(() => axios.get(`${ENDPOINT}state`))
+  .then(({ data }) => {
+    console.log(data)
+    console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: argv.ip }}})
+  })
+  
+console.log(argv)
+
 console.log('started')
+
 main()
