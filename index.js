@@ -16,7 +16,7 @@ const base64Encode = file => promisify(fs.readFile)(file).then(bitmap => new Buf
 
 const takeAndUploadPicture = (uploadEndpoint) => myCamera.snap()
   .then(() => base64Encode(pictureFile))
-  .then(base64 => axios.post(`${ENDPOINT}${uploadEndpoint}`, { image: base64 }))
+  .then(base64 => axios.post(`${ENDPOINT}${uploadEndpoint}`, { image: base64, camera: argv.name }))
   .then(() => console.log('PICTURE'))
 
 const main = () => Promise.resolve()
