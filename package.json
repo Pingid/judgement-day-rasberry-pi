@@ -1,0 +1,12 @@
+{
+  "name": "judgement-day-rasberry-pi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Pingid/judgement-day-rasberry-pi.git",
+  "author": "Pingid - macbook <dm.beaven@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "pi-camera": "^1.2.1"
+  }
+}
