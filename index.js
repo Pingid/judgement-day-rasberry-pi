@@ -38,11 +38,12 @@ const startup = () => Promise.resolve()
   .then(({ data }) => {
     
     return spawnProm('hostname', ['-I'])
-      .then(ip => {
-        console.log(data)
-        console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: ip }}})
+      .then(IP => {
+        const newData = { ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: IP }}};
+        axios.post(`${ENDPOINT}state`, { data: newData })
       })
   })
-  
+
+console.log(argv)
 startup()
 main()
