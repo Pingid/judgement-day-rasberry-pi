@@ -30,7 +30,8 @@ const startup = () => Promise.resolve()
     console.log(data)
     console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: argv.ip }}})
   })
-  
+
+console.log(process.argv)
 console.log(argv)
 
 console.log('started')
