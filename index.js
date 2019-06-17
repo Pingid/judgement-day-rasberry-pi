@@ -4,6 +4,7 @@ const { promisify } = require('util')
 const axios = require('axios')
 const argv = require('yargs').argv
 const { spawn } = require('child_process');
+const R = require('ramda');
 
 const pictureFile = `${__dirname}/test.jpg`
 const ENDPOINT = 'https://csdn6q1rd0.execute-api.eu-west-2.amazonaws.com/dev/'
@@ -39,7 +40,7 @@ const startup = () => Promise.resolve()
     
     return spawnProm('hostname', ['-I'])
       .then(IP => {
-        const newData = { ...data, cameras: { ...data.cameras, address: { ...data.cameras.address, [argv.name]: IP }}};
+        const newData = { ...data, cameras: { ...data.cameras, address: { ...R.pick(['one', 'two', 'three'], data.cameras.address), [argv.name]: IP }}};
         axios.post(`${ENDPOINT}state`, { data: newData })
       })
   })
