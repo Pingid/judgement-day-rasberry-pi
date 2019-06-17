@@ -26,7 +26,7 @@ const main = () => Promise.resolve()
   .then(data => sleep(data.cameras.delay || 10000).then(main))
   .catch(error => { 
     console.log(error.message)
-    return sleep(data.cameras.delay || 10000).then(main) 
+    return sleep(500000).then(main) 
   })
 
   const spawnProm = (command, args) => new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ const startup = () => Promise.resolve()
     
     return spawnProm('hostname', ['-I'])
       .then(IP => {
-        const newData = { ...data, cameras: { ...data.cameras, address: { ...R.pick(['one', 'two', 'three'], data.cameras.address), [argv.name]: IP }}};
+        const newData = { ...data, cameras: { ...data.cameras, address: { ...data.cameras.address, [argv.name]: IP }}};
         axios.post(`${ENDPOINT}state`, { data: newData })
       })
   })
