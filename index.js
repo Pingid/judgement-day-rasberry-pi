@@ -16,8 +16,11 @@ const takeAndUploadPicture = (uploadEndpoint) => myCamera.snap()
   .then(base64 => axios.post(`${ENDPOINT}${uploadEndpoint}`, { image: base64 }))
   .then(() => console.log('PICTURE'))
 
-const main = () => axios.get(`${ENDPOINT}state`)
+const main = () => Promise.resolve()
+  .then(() => console.log('tick'))
+  .then(() => axios.get(`${ENDPOINT}state`))
   .then(({ data }) => data.cameras.running ? takeAndUploadPicture(data.cameras.uploadEndpoint).then(() => data) : data)
   .then(data => sleep(data.cameras.delay || 10000).then(main))
 
+console.log('started')
 main()
