@@ -25,22 +25,24 @@ const main = () => Promise.resolve()
   .then(data => sleep(data.cameras.delay || 10000).then(main))
   .catch(error => { console.log(error); return sleep(data.cameras.delay || 10000).then(main) })
 
+  const spawnProm = (command, args) => new Promise((resolve, reject) => {
+    const ls = spawn(command, args);
+    let ret = '';
+    ls.stdout.on('data', (data) => { ret += data });
+    ls.stderr.on('data', (data) => { ret += data });
+    ls.on('close', (code) => { resolve(ret.trim()) });
+  })
+
 const startup = () => Promise.resolve()
   .then(() => axios.get(`${ENDPOINT}state`))
   .then(({ data }) => {
-    console.log(data)
-    console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: argv.ip }}})
+    
+    return spawnProm('hostname', ['-I'])
+      .then(ip => {
+        console.log(data)
+        console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: ip }}})
+      })
   })
-
-
-const spawnProm = (command, args) => new Promise((resolve, reject) => {
-  const ls = spawn(command, args);
-  let ret = '';
-  ls.stdout.on('data', (data) => { ret += data });
-  ls.stderr.on('data', (data) => { ret += data });
-  ls.on('close', (code) => { resolve(ret) });
-})
-
-spawnProm('hostname', ['-I']).then(console.log)
-
+  
+startup()
 main()
