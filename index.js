@@ -3,6 +3,7 @@ const fs = require('fs')
 const { promisify } = require('util')
 const axios = require('axios')
 const argv = require('yargs').argv
+const { spawn } = require('child_process');
 
 const pictureFile = `${__dirname}/test.jpg`
 const ENDPOINT = 'https://csdn6q1rd0.execute-api.eu-west-2.amazonaws.com/dev/'
@@ -31,9 +32,15 @@ const startup = () => Promise.resolve()
     console.log({ ...data, cameras: { ...data.cameras, address: { ...(data.cameras.address | {}), [argv.name]: argv.ip }}})
   })
 
-console.log(process.argv)
-console.log(argv)
 
-console.log('started')
+const spawnProm = (command, args) => new Promise((resolve, reject) => {
+  const ls = spawn(command, args);
+  let ret = '';
+  ls.stdout.on('data', (data) => { ret += data });
+  ls.stderr.on('data', (data) => { ret += data });
+  ls.on('close', (code) => { resolve(ret) });
+})
+
+spawnProm('hostname', ['-I']).then(console.log)
 
 main()
