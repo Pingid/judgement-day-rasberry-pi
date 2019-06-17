@@ -24,7 +24,10 @@ const main = () => Promise.resolve()
   .then(() => axios.get(`${ENDPOINT}state`))
   .then(({ data }) => data.cameras.running ? takeAndUploadPicture(data.cameras.uploadEndpoint).then(() => data) : data)
   .then(data => sleep(data.cameras.delay || 10000).then(main))
-  .catch(error => { console.log(error); return sleep(data.cameras.delay || 10000).then(main) })
+  .catch(error => { 
+    console.log(error.message)
+    return sleep(data.cameras.delay || 10000).then(main) 
+  })
 
   const spawnProm = (command, args) => new Promise((resolve, reject) => {
     const ls = spawn(command, args);
