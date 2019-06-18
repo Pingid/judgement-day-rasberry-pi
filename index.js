@@ -16,18 +16,8 @@ const base64Encode = file => promisify(fs.readFile)(file).then(bitmap => new Buf
 
 const takeAndUploadPicture = (uploadEndpoint) => myCamera.snap()
   .then(() => base64Encode(pictureFile))
-  .then(base64 => axios.post(`${ENDPOINT}${uploadEndpoint}`, { image: base64, camera: argv.name }))
+  .then(base64 => axios.post(`${ENDPOINT}${uploadEndpoint}`, { image: base64, name: argv.name }))
   .then(() => console.log('PICTURE'))
-
-const main = () => Promise.resolve()
-  .then(() => console.log('tick'))
-  .then(() => axios.get(`${ENDPOINT}state`))
-  .then(({ data }) => data.cameras.running ? takeAndUploadPicture(data.cameras.uploadEndpoint).then(() => data) : data)
-  .then(data => sleep(data.cameras.delay || 10000).then(main))
-  .catch(error => { 
-    console.log(error.message)
-    return sleep(500000).then(main) 
-  })
 
   const spawnProm = (command, args) => new Promise((resolve, reject) => {
     const ls = spawn(command, args);
@@ -46,6 +36,19 @@ const startup = () => Promise.resolve()
         const newData = { ...data, cameras: { ...data.cameras, address: { ...data.cameras.address, [argv.name]: IP }}};
         axios.post(`${ENDPOINT}state`, { data: newData })
       })
+  })
+
+let defaultSleep = 60000
+
+const main = () => Promise.resolve()
+  .then(() => console.log('tick'))
+  .then(() => axios.get(`${ENDPOINT}state`))
+  .then(({ data }) => { defaultSleep = data.cameras.delay; return { data }})
+  .then(({ data }) => data.cameras.running ? takeAndUploadPicture(data.cameras.uploadEndpoint).then(() => data) : data)
+  .then(data => sleep(data.cameras.delay || 10000).then(main))
+  .catch(error => { 
+    console.log(error.message)
+    return sleep(defaultSleep).then(main) 
   })
 
 startup()
