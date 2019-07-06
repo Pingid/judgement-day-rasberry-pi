@@ -22,8 +22,8 @@ int count = 0;
 int incomingByte = 0;
 
 int colorR = 255;
-int colorG = 0;
-int colorB = 0;
+int colorG = 255;
+int colorB = 255;
 bool isFlashing = true;
 
 
@@ -146,11 +146,11 @@ void waitListen() {
 //  easeLights(startColor, endColor);
 
   for (int i = 0; i < NUMPIXELS; i++) {    
-      pixels.setPixelColor(i, pixels.Color(0, 255, 0));
+      pixels.setPixelColor(i, pixels.Color(13, 181, 224));
    }
    pixels.show();
    
-   delay(4000);
+   delay(2000);
 }
 
 void flash() {
