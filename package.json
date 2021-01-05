@@ -6,7 +6,7 @@
   "author": "Pingid - macbook <dm.beaven@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "pi-camera": "^1.2.1",
     "ramda": "^0.26.1",
     "serialport": "^7.1.5",
